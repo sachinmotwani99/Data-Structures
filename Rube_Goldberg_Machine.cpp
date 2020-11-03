@@ -224,6 +224,130 @@ void BinaryTree2DoubleLinkedList(Node *root, Node **head)
 } 
 
 
+/*-----------FUNCTION DECLARATIONS FOR QUICKSORT*/
+
+void swap( string *a, string *b ) 
+{ 
+    string t = *a;
+    *a = *b;
+    *b = t;
+ } 
+
+// A utility function to find last node of linked list 
+struct Node *lastNode(struct Node *root) 
+{ 
+	while (root && root->right) 
+		root = root->right; 
+	return root; 
+} 
+
+/* Considers last element as pivot, places the 
+pivot element at its correct position in sorted array, 
+and places all smaller (smaller than pivot) to left 
+of pivot and all greater elements to right of pivot */
+struct Node* partition(struct Node *l, struct Node *h) 
+{ 
+	// set pivot as h element 
+	string x = h->data; 
+
+	// similar to i = l-1 for array implementation 
+	struct Node *i = l->left; 
+
+	// Similar to "for (int j = l; j <= h- 1; j++)" 
+	for (struct Node *j = l; j != h; j = j->right) 
+	{ 
+		if (j->data <= x) 
+		{ 
+			// Similar to i++ for array 
+			i = (i == NULL) ? l : i->right; 
+
+			swap((i->data), (j->data)); 
+		} 
+	} 
+	i = (i == NULL) ? l : i->right; // Similar to i++ 
+	swap((i->data), (h->data)); 
+	return i; 
+} 
+
+/* A recursive implementation of quicksort for linked list */
+void _quickSort(struct Node* l, struct Node *h) 
+{ 
+	if (h != NULL && l != h && l != h->right) 
+	{ 
+		struct Node *p = partition(l, h); 
+		_quickSort(l, p->left); 
+		_quickSort(p->right, h); 
+	} 
+} 
+
+// The main function to sort a linked list. 
+// It mainly calls _quickSort() 
+void quickSort(struct Node *head) 
+{ 
+	// Find last node 
+	struct Node *h = lastNode(head); 
+
+	// Call the recursive QuickSort 
+	_quickSort(head, h); 
+}
+
+/*----------------INSERTION IN A SORTED WAY-------------------------*/
+
+
+struct Node* getNode(string data) 
+{ 
+	// allocate node 
+	struct Node* newNode = 
+		(struct Node*)malloc(sizeof(struct Node)); 
+
+	// put in the data 
+	newNode->data = data; 
+	newNode->left = newNode->right = NULL; 
+	return newNode; 
+} 
+
+// function to insert a new node in sorted way in 
+// a sorted doubly linked list 
+void sortedInsert(struct Node** head_ref, struct Node* newNode) 
+{ 
+	struct Node* current; 
+
+	// if list is empty 
+	if (*head_ref == NULL) 
+		*head_ref = newNode; 
+
+	// if the node is to be inserted at the beginning 
+	// of the doubly linked list 
+	else if ((*head_ref)->data >= newNode->data) { 
+		newNode->right = *head_ref; 
+		newNode->right->left = newNode; 
+		*head_ref = newNode; 
+	} 
+
+	else { 
+		current = *head_ref; 
+
+		// locate the node after which the new node 
+		// is to be inserted 
+		while (current->right != NULL && 
+			current->right->data < newNode->data) 
+			current = current->right; 
+
+		/* Make the appropriate links */
+		newNode->right = current->right; 
+
+		// if the new node is not inserted 
+		// at the end of the list 
+		if (current->right != NULL) 
+			newNode->right->left = newNode; 
+
+		current->right = newNode; 
+		newNode->left = current; 
+	} 
+} 
+
+
+
 /*---------------THE MAIN FUNCTION-----------------------------*/
 
 int main()
@@ -286,6 +410,11 @@ int main()
 
 	printList(head); 
     
+   quickSort(head); 
+   
+	printList(head); 
+    
+
     string s,a,b,c,d;
     cout << "Enter the first name:";
     cin >> a;
@@ -298,18 +427,12 @@ int main()
     s = a + ' ' + b + ',' + c + ',' + d;
     cout << s;
 
-    string myText;
+    struct Node* new_node = getNode(s); 
+	sortedInsert(&head, new_node);
 
-    ifstream MyReadFile("abc.csv");
-    while (getline (MyReadFile, myText)) {
-          cout << myText;
- }
+    printList(head); 
+    
 
-MyReadFile.close();
-  ofstream MyFile("abc.csv");
-myText += s;
-  MyFile << myText;
-  MyFile.close(); 
-   
+ 
     return 0 ;
  }
