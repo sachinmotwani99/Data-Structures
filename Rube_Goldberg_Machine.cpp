@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <windows.h>
+#include <conio.h>
 #include <queue>
 #include <iterator>
 #include <string.h>
@@ -12,6 +14,8 @@ using namespace std;
 int front = -1, rear = -1;  
 string queue_[maxsize];  
 
+
+/*-------------ENQUEING AN ELEMENT INTO THE QUEUE-----------------*/
 void insert(string item)  
 {  
     if(rear == maxsize-1)  
@@ -30,6 +34,8 @@ void insert(string item)
     }  
     queue_[rear] = item;     
 }  
+
+/*------------DELETING FROM A QUEUE--------------------------*/
 void del()  
 {  
     string item;   
@@ -56,7 +62,9 @@ void del()
       
       
 }  
-      
+
+
+/*-----------FUNCTION TO DISPLAY THE QUEUE----------------------*/      
 void display()  
 {  
     int i;  
@@ -77,6 +85,8 @@ void display()
 string stack[100];
 int i,j,n=1024,top=-1;
   
+
+/*-----------FUNCTION TO PUSH AN ELEMENT INTO THE STACK----------*/
 void push (string val)  
 {  
     if (top == n )   
@@ -87,7 +97,9 @@ void push (string val)
         stack[top] = val;   
     }   
 }   
-  
+
+
+/*-----------FUNCTION TO POP AN ELEMENT INTO THE STACK----------*/
 string pop()   
 {   
     string x = stack[top];
@@ -97,6 +109,9 @@ string pop()
         top = top -1;   
     return x;
 }   
+
+
+/*---------FUNCTION TO DIAPLAY THE STACK--------------*/
 void show()  
 {  
     for (i=top;i>=0;i--)  
@@ -111,6 +126,7 @@ void show()
 
 /*---------------IMPLEMENTING THE BINARY TREE----------------------------------*/
 
+/*----------DEFINING THE NODE STRUCTURE----------------------*/
 struct Node 
 {
 	string data;
@@ -118,10 +134,13 @@ struct Node
 	Node* right;
 };
 
+
+/*----------------FUNCTION TO CREATE A SIMPLE NODE FROM GIVEN VALUE----------------*/
 Node* CreateNode(string data)
 {
 	Node* newNode = new Node();
-	if (!newNode) {
+	if (!newNode) 
+    {
 		cout << "Memory error\n";
 		return NULL;
 	}
@@ -131,6 +150,7 @@ Node* CreateNode(string data)
 }
 
 
+/*------------------FUNCTION TO PRINT THE LIST----------------------------*/
 void printList(Node *node) 
 { 
 	while (node!=NULL) 
@@ -140,7 +160,7 @@ void printList(Node *node)
 	} 
 } 
 
-
+/*----------------------FUNCTION FOR INORDER TRAVERSAL OF THE TREE------------------------*/
 void inorder(Node* temp)
 {
 	if (temp == NULL)
@@ -151,7 +171,7 @@ void inorder(Node* temp)
 	inorder(temp->right);
 }
 
-
+/*----------------------FUNCTION FOR PREORDER TRAVERSAL OF THE TREE------------------------*/
 void preorder(Node* temp)
 {
 	if (temp == NULL)
@@ -164,6 +184,7 @@ void preorder(Node* temp)
 }
 
 
+/*----------------------FUNCTION FOR POSTORDER TRAVERSAL OF THE TREE------------------------*/
 void postorder(Node* temp)
 {
 	if (temp == NULL)
@@ -176,29 +197,34 @@ void postorder(Node* temp)
 
 /*---------CONVERTING THE BINARY TREE TO A LINKED LIST-------------------------*/
 
+/*----------------------FUNCTION TO INSERT DATA INTO THE TREE------------------------*/
 Node* InsertNode(Node* root, string data)
 {
-	if (root == NULL) {
+	if (root == NULL) 
+    {
 		root = CreateNode(data);
 		return root;
 	}
 	queue<Node*> q;
 	q.push(root);
 
-	while (!q.empty()) {
+	while (!q.empty()) 
+    {
 		Node* temp = q.front();
 		q.pop();
 
 		if (temp->left != NULL)
 			q.push(temp->left);
-		else {
+		else 
+        {
 			temp->left = CreateNode(data);
 			return root;
 		}
 
 		if (temp->right != NULL)
 			q.push(temp->right);
-		else {
+		else 
+        {
 			temp->right = CreateNode(data);
 			return root;
 		}
@@ -206,7 +232,7 @@ Node* InsertNode(Node* root, string data)
 }
 
 
-
+/*----------------------FUNCTION TO CONVERT A BINARY TREE TO DOUBLY LINKED LIST------------------------*/
 void BinaryTree2DoubleLinkedList(Node *root, Node **head) 
 { 
 	if (root == NULL) return; 
@@ -224,8 +250,10 @@ void BinaryTree2DoubleLinkedList(Node *root, Node **head)
 } 
 
 
-/*-----------FUNCTION DECLARATIONS FOR QUICKSORT*/
+/*-----------FUNCTION DECLARATIONS FOR QUICKSORT-------------------*/
 
+
+/*------------------FUNCTION TO SWAP VALUES OF TWO NODES---------------------------*/
 void swap( string *a, string *b ) 
 { 
     string t = *a;
@@ -233,7 +261,7 @@ void swap( string *a, string *b )
     *b = t;
  } 
 
-// A utility function to find last node of linked list 
+/*-------------------FUNCTION TO FIND last node of list--------------------------*/
 struct Node *lastNode(struct Node *root) 
 { 
 	while (root && root->right) 
@@ -241,35 +269,28 @@ struct Node *lastNode(struct Node *root)
 	return root; 
 } 
 
-/* Considers last element as pivot, places the 
-pivot element at its correct position in sorted array, 
-and places all smaller (smaller than pivot) to left 
-of pivot and all greater elements to right of pivot */
+
+/*---------------------FUNCTION TO CREATE PARTITION USEFUL IN QUICK SORT------------------------*/
 struct Node* partition(struct Node *l, struct Node *h) 
 { 
-	// set pivot as h element 
 	string x = h->data; 
-
-	// similar to i = l-1 for array implementation 
-	struct Node *i = l->left; 
-
-	// Similar to "for (int j = l; j <= h- 1; j++)" 
-	for (struct Node *j = l; j != h; j = j->right) 
+    struct Node *i = l->left; 
+    for (struct Node *j = l; j != h; j = j->right) 
 	{ 
 		if (j->data <= x) 
 		{ 
-			// Similar to i++ for array 
 			i = (i == NULL) ? l : i->right; 
-
-			swap((i->data), (j->data)); 
+            swap((i->data), (j->data)); 
 		} 
 	} 
-	i = (i == NULL) ? l : i->right; // Similar to i++ 
+	i = (i == NULL) ? l : i->right;  
 	swap((i->data), (h->data)); 
 	return i; 
 } 
 
-/* A recursive implementation of quicksort for linked list */
+
+
+/*---------------A RECURSIVE FUNCTION IMPLEMENTATION OF QUICK SORT------------------------------*/
 void _quickSort(struct Node* l, struct Node *h) 
 { 
 	if (h != NULL && l != h && l != h->right) 
@@ -280,64 +301,44 @@ void _quickSort(struct Node* l, struct Node *h)
 	} 
 } 
 
-// The main function to sort a linked list. 
-// It mainly calls _quickSort() 
+
+/*---------------------MAIN FUNCTION CALL FOR QUICKSORT------------------------*/
 void quickSort(struct Node *head) 
 { 
-	// Find last node 
 	struct Node *h = lastNode(head); 
-
-	// Call the recursive QuickSort 
 	_quickSort(head, h); 
 }
 
 /*----------------INSERTION IN A SORTED WAY-------------------------*/
 
-
 struct Node* getNode(string data) 
 { 
-	// allocate node 
-	struct Node* newNode = 
-		(struct Node*)malloc(sizeof(struct Node)); 
-
-	// put in the data 
+	struct Node* newNode = (struct Node*)malloc(sizeof(struct Node)); 
 	newNode->data = data; 
 	newNode->left = newNode->right = NULL; 
 	return newNode; 
 } 
 
-// function to insert a new node in sorted way in 
-// a sorted doubly linked list 
+/*--------------------INSERTING NEW NODE IN SORTED MANNER-------------------------*/
 void sortedInsert(struct Node** head_ref, struct Node* newNode) 
 { 
 	struct Node* current; 
-
-	// if list is empty 
 	if (*head_ref == NULL) 
-		*head_ref = newNode; 
-
-	// if the node is to be inserted at the beginning 
-	// of the doubly linked list 
-	else if ((*head_ref)->data >= newNode->data) { 
+		*head_ref = newNode;  
+	else if ((*head_ref)->data >= newNode->data) 
+    { 
 		newNode->right = *head_ref; 
 		newNode->right->left = newNode; 
 		*head_ref = newNode; 
-	} 
-
-	else { 
+	}
+	else 
+    { 
 		current = *head_ref; 
-
-		// locate the node after which the new node 
-		// is to be inserted 
-		while (current->right != NULL && 
-			current->right->data < newNode->data) 
+    	while (current->right != NULL && current->right->data < newNode->data) 
 			current = current->right; 
 
-		/* Make the appropriate links */
 		newNode->right = current->right; 
 
-		// if the new node is not inserted 
-		// at the end of the list 
 		if (current->right != NULL) 
 			newNode->right->left = newNode; 
 
@@ -346,7 +347,7 @@ void sortedInsert(struct Node** head_ref, struct Node* newNode)
 	} 
 } 
 
-
+/*-----------END OF ALL THE ADT DECLARATIONS AND FUNCTIONS IMPLEMENTATIONS---------------------*/
 
 /*---------------THE MAIN FUNCTION-----------------------------*/
 
@@ -360,6 +361,7 @@ int main()
    int n=0;
    cout << "Kindly Enter the name of the csv file with externsion\nPLease make sure that the file is in the same directory;-)\n";
    cin >> f;
+   cout << "Reading data from " << f << "......\n\n\n";
    FILE *fstream = fopen(f,"r");
    if(fstream == NULL)
    {
@@ -371,32 +373,53 @@ int main()
      r[i] = line;
      /*-----------PRINTING EACH RECORD LINE BY LNE--------------------*/
      record = strtok(line,",");
+     
      while(record != NULL)
      {
-     record = strtok(NULL,",");
+        cout << "   |     " << record ; 
+        record = strtok(NULL,",");
      }
      n++;
      i++;
    }
 
-/*------------ENQUEUEING EACH DATA INTO THE QUEUE----------------*/
+   cout << "\n\nTotal number of entries read from the csv file:   " << n-1 << "\n\n\n";
+   cout << "Press any key to continue enqueing the data into a queue\n\n\n";
+   getch();
 
+
+/*------------ENQUEUEING EACH DATA INTO THE QUEUE----------------*/
+   cout << "Enqueing the data into a queue.........\n\n\n\n";
    for(int i=1;i<n;i++)
    {
      string s = r[i];
      insert(s);   
    }
   /*-----------------DISPLAYING THE QUEUE--------------------------*/ 
+    cout << "Succesfully enqueued\n\nPress any key to display the queue\n\n\n";
+    getch();
     display(); 
 
+    cout << "\n\nNow we dequeue each element and add it back to the queue\n\n\n\n";
+    cout << "\nPrint any key to display the queue:\n ";
+    getch();
+    display();
 /*-----------------DEQUEUING EACH ELEMENT FROM THE QUEUE AND PUSHING IT INTO THE STACK------------*/
+    cout << "\n\n\nPress any key to push the data from the queue to the stack\n\n:";
+    getch();
+    cout << "Pushing the data from queue to the stack...\n\n";
     for(int i=0;i<=n;i++)
     {
         push(queue_[i]);
     }
+    cout << "\n\n\nPress any key to view the stack now:\n";
+    getch();
     show();
-
+    
+    cout << "\nHence the stack element are printed\n\n";
     /*-----------NOW POPING ELEMENT FROM STACK AND INSERTING IT INTO THE BINSARY TREE--------------*/
+    cout <<  "\n\n\nPress any key to pop each element and insert it into a binary tree in order:\n";
+    cout << "Poping elements from stack to tree....\n\n\n";
     Node* root = CreateNode(pop());
     for(int i=0;i<n;i++)
     {
@@ -404,35 +427,72 @@ int main()
         root = InsertNode(root, key);
 
     }
-    inorder(root);
+    
+    cout << "\n\nInssertion in tree successfull\n\n";
+    cout << "\n\nPress anykey to display the pre order traversl aof the tren\n";
+    getch();
+    preorder(root);
+    
+
+    cout << "\n\nPress anykey to display the post order traversl aof the tren\n";
+    getch();
+    postorder(root);
+
+    cout << "\n\nPress anykey to display the in order traversl aof the tren\n";
+    getch();
+    postorder(root);
+        
+    cout << "HHence the tree dispplayed\n";
+    cout << "Now press any key to convert the binary tree into a doubly linked list\n";
+    getch();
     Node *head = NULL; 
 	BinaryTree2DoubleLinkedList(root, &head); 
 
+    cout << "Conversion of tree to DLL successfull\n\n";
+    cout << "Press any key to print the linked list\n";
+    getch();
 	printList(head); 
     
-   quickSort(head); 
-   
-	printList(head); 
+    cout << "Hence the linked list displayed\n";
+    cout << "Press any key to sort the inked list by quik sort:\n";
+    getch();
+
+    cout << "\n\nSorting the list.....\n\n";
+    quickSort(head); 
     
+    cout << "Linked List Successfully sorted.\nPress any key to print the sorted list\n";
+    getch();
+	printList(head);
 
-    string s,a,b,c,d;
-    cout << "Enter the first name:";
-    cin >> a;
-    cout << "Enter the last name:";
-    cin >> b;
-    cout << "Enter the age:";
-    cin >> c;
-    cout << "Enter the date of birth in DD-MM-YYY format";
-    cin >> d;
-    s = a + ' ' + b + ',' + c + ',' + d;
-    cout << s;
+    cout << "\n\n\nEnter the new recordto be inderted\n\n";
+     
+                    string s,a,b,c,d;
+                    cout << "Enter the first name:";
+                    cin >> a;
+                    cout << "Enter the last name:";
+                    cin >> b;
+                    cout << "Enter the age:";
+                    cin >> c;
+                    cout << "Enter the date of birth in DD-MM-YYY format:";
+                    cin >> d;
+                    s = a + ' ' + b + ',' + c + ',' + d + '\n';
+                    
+                    struct Node* new_node = getNode(s); 
+                	sortedInsert(&head, new_node);
 
-    struct Node* new_node = getNode(s); 
-	sortedInsert(&head, new_node);
+                    cout << "\nInsertion of record successfull\n\n";
+        
 
+        
+    quickSort(head); 
+    
+        
+    
+    
+    cout << "\n\n\n\nPrinting the final list after all the operatiosn....\n\n";
     printList(head); 
-    
 
- 
+    
+    cout << "\n\n--------End of the program------------";
     return 0 ;
  }
